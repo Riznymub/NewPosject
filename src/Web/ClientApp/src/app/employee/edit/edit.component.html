@@ -1,0 +1,73 @@
+<div class="container mt-4">
+    <div class="card shadow-sm">
+       
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h1 class="card-title mb-0">Update Employee</h1>
+            <a routerLink="/employee/index" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-circle-fill me-2"></i>Back to List
+            </a>
+        </div>
+        <div class="card-body">
+            <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="form">
+
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <input 
+                        formControlName="name"
+                        id="name" 
+                        type="text" 
+                        [(ngModel)]="employee.name"
+                        class="form-control">
+                    <div *ngIf="f['name'].touched 
+                    && f['name'].invalid" class="alert alert-danger">
+                        <div *ngIf="f['name'].errors 
+                        && f['name'].errors['required']">
+                        Name is required.
+                        </div>
+                    </div>
+                        
+                </div>
+
+                <div class="mb-3">
+                    <label for="age" class="form-label">Age:</label>
+                    <input 
+                        formControlName="age"
+                        id="age" 
+                        type="number" 
+                        [(ngModel)]="employee.age"
+                        class="form-control">
+                    <div *ngIf="f['age'].touched && f['age'].invalid" class="alert alert-danger">
+                        <div *ngIf="f['age'].errors && f['age'].errors['required']">
+                        Age is required.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="department" class="form-label">Department:</label>
+                     <input 
+                        formControlName="department"
+                        id="department" 
+                        type="text" 
+                        [(ngModel)]="employee.department"
+                        class="form-control">
+                    <div *ngIf="f['department'].touched && f['department'].invalid" class="alert alert-danger">
+                        <div *ngIf="f['department'].errors && f['department'].errors['required']">
+                        Department is required.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary" [disabled]="!form.valid">
+                        <i class="bi bi-arrow-up-circle me-2"></i>Update
+                    </button>
+                </div>
+            </form>
+
+            <div *ngIf="!form">
+                <p class="text-center text-muted py-4">Loading employee data...</p>
+                </div>
+        </div>
+    </div>
+</div>
