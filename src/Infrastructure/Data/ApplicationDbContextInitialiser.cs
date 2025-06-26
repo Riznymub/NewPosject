@@ -30,7 +30,11 @@ public class ApplicationDbContextInitialiser
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
 
-    public ApplicationDbContextInitialiser(ILogger<ApplicationDbContextInitialiser> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+    public ApplicationDbContextInitialiser(
+        ILogger<ApplicationDbContextInitialiser> logger,
+        ApplicationDbContext context,
+        UserManager<ApplicationUser> userManager,
+        RoleManager<IdentityRole> roleManager)
     {
         _logger = logger;
         _context = context;
@@ -42,7 +46,16 @@ public class ApplicationDbContextInitialiser
     {
         try
         {
-            await _context.Database.MigrateAsync();
+            var pendingMigrations = await _context.Database.GetPendingMigrationsAsync();
+            if (pendingMigrations.Any())
+            {
+                _logger.LogInformation("Applying pending migrations...");
+                await _context.Database.MigrateAsync();
+            }
+            else
+            {
+                _logger.LogInformation("No pending migrations found.");
+            }
         }
         catch (Exception ex)
         {
@@ -82,12 +95,11 @@ public class ApplicationDbContextInitialiser
             await _userManager.CreateAsync(administrator, "Administrator1!");
             if (!string.IsNullOrWhiteSpace(administratorRole.Name))
             {
-                await _userManager.AddToRolesAsync(administrator, new [] { administratorRole.Name });
+                await _userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name });
             }
         }
 
         // Default data
-        // Seed, if necessary
         if (!_context.TodoLists.Any())
         {
             _context.TodoLists.Add(new TodoList
@@ -97,7 +109,7 @@ public class ApplicationDbContextInitialiser
                 {
                     new TodoItem { Title = "Make a todo list 📃" },
                     new TodoItem { Title = "Check off the first item ✅" },
-                    new TodoItem { Title = "Realise you've already done two things on the list! 🤯"},
+                    new TodoItem { Title = "Realise you've already done two things on the list! 🤯" },
                     new TodoItem { Title = "Reward yourself with a nice, long nap 🏆" },
                 }
             });

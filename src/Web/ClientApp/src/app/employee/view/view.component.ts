@@ -9,10 +9,10 @@ import { Employee } from '../employee';
   selector: 'app-view',
   imports: [RouterModule],
   templateUrl: './view.component.html',
-  styleUrl: './view.component.scss'
+  styleUrl: './view.component.scss',
+  standalone: true,
 })
 export class ViewComponent {
-
   id!: number;
   employee!: Employee;
 
@@ -23,8 +23,8 @@ export class ViewComponent {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['empId'];
-     this.employeeService.find(this.id).subscribe((response)=>{
+    this.employeeService.find(this.id).subscribe((response) => {
       this.employee = response.data;
-    }); 
+    });
   }
 }
